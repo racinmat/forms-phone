@@ -26,6 +26,8 @@ class PhoneNumberInput extends \Nette\Forms\Controls\BaseControl
 	const NAME_PREFIX = 'prefix';
 	/** @var string */
 	const NAME_NUMBER = 'number';
+    /** @var string */
+    const ONLY_PREFIX = 'onlyPrefix';                                       //toto přidáno
 
 	/** @var array */
 	protected static $phonePrefixes = array(
@@ -327,7 +329,15 @@ class PhoneNumberInput extends \Nette\Forms\Controls\BaseControl
 			return $this;
 		}
 
-		$value = $this->normalizePhoneNumber($value);
+        $onlyPrefix = FALSE;                                            //toto je přidáno
+        if (Strings::endsWith($value, self::ONLY_PREFIX)) {             //tato podmínka přidána, pokud je to ve formátu "předvolba".self::ONLY_PREFIX, pak je nastaví pouze předvolba
+            $length = Strings::length($value);
+            $prefixLength = Strings::length(self::ONLY_PREFIX);
+            $value = Strings::substring($value, 0, $length-$prefixLength);
+            $value = $value."000000000";                                //přidání nějakých čísel, aby položka prošla validací (tato čísla se potom stejně zahodí)
+            $onlyPrefix = TRUE;
+        }
+        $value = $this->normalizePhoneNumber($value);
 
 		if (!$this->validatePhoneNumberString($value)) {
 			throw new \Nette\InvalidArgumentException('Value must starts with + and numbers, "' . $value . '" given.');
@@ -342,7 +352,11 @@ class PhoneNumberInput extends \Nette\Forms\Controls\BaseControl
 		$this->prefix = $data[static::NAME_PREFIX];
 		$this->number = $data[static::NAME_NUMBER];
 
-		return $this;
+        if ($onlyPrefix) {                                              //toto je přidáno
+            $this->number = NULL;
+        }
+
+        return $this;
 	}
 
 	/**
@@ -439,7 +453,7 @@ class PhoneNumberInput extends \Nette\Forms\Controls\BaseControl
 	 * @param string
 	 * @return bool
 	 */
-	private function validatePhoneNumberString($value)
+	public function validatePhoneNumberString($value)
 	{
 		$value = $this->normalizePhoneNumber($value);
 		return (bool) Strings::match($value, $this->getPattern());
