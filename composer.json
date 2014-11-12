@@ -1,6 +1,6 @@
 {
-	"name": "nella/forms-phone",
-	"description": "Phone control for Nette Forms.",
+	"name": "azathoth/forms-phone",
+	"description": "Small modification of Nella Phone control for Nette Forms.",
 	"homepage": "http://doc.nellafw.org/forms/phone",
 	"type": "library",
 	"keywords": ["nette", "forms", "control", "phone", "input"],
@@ -11,8 +11,11 @@
 		"email": "patrik@votocek.cz",
 		"homepage": "http://patrik.votocek.cz",
 		"role": "Developer"
-	}
-	],
+	},
+    {
+        "name": "Matěj Račinský"
+    }
+    ],
 	"support": {
 		"issues": "https://github.com/nella/forms-phone/issues",
 		"source": "https://github.com/nella/forms-phone"
